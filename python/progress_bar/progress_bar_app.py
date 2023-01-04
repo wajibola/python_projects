@@ -2,6 +2,12 @@
 @author: waziri
 """
 
+# Implementation of a simple GUI that shows a progress bar together with three buttons
+# (Start, Stop and Reset). When pressing Start button the application should launch a secondary
+# process that will take 5 seconds and should update the progress bar. This process could be
+# aborted in any moment by pressing the Stop button. Progress bar state could also be reset to 
+# initial state by pressing Reset Button.
+
 from tkinter import *
 from tkinter.ttk import *
 
