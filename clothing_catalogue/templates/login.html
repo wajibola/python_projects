@@ -1,0 +1,30 @@
+<!-- login.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link type="text/css" rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <h1 class="sign-in-head" style="text-align: center; color: #000000; font-size: 28px; font-weight: normal; line-height: 32px; margin-top: 0; margin-bottom: 12px;">
+        Enter your access information to sign in.
+    </h1>
+    <form action="/login/" method="POST" id="loginForm">
+        {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <!-- <br> -->
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <!-- <br> -->
+
+            <div class="button-container">
+                <button type="submit">Login</button>
+            </div>
+    </form>
+</body>
+</html>

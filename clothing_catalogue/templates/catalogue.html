@@ -1,0 +1,151 @@
+<!-- catalogue.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        canvas {
+            /* float: left; */
+            display: block;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+        canvas:hover {
+            transition: all 1s;
+            transform: rotateY(360deg);
+        }
+        #item1Canvas{
+            background-image: url("{% static 'img/cloth1.png' %}");
+        }
+        #item2Canvas{
+            background-image: url("{% static 'img/cloth2.jpg' %}");
+        }
+        .container{
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .button-container{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .item {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .controls {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #000000; font-size: 28px; font-weight: normal; line-height: 32px; margin-top: 0; margin-bottom: 12px;">Clothing Catalogue</h1>
+    <div class="container">
+        <div class="item">
+            <h2>Item 1</h2>
+            <canvas class="clickable-canvas" id="item1Canvas"></canvas>
+            <div class="controls">
+                <label for="color">Color:</label>
+                <input type="color" id="color" value="#ff0000">
+                <label for="texture">Texture:</label>
+                <select id="texture">
+                    <option value="texture1.jpg">Texture 1</option>
+                    <option value="texture2.jpg">Texture 2</option>
+                    <option value="texture3.jpg">Texture 2</option>
+                    <option value="texture4.jpg">Texture 2</option>
+                </select>
+            </div>
+        </div>
+        <div class="item">
+            <h2>Item 2</h2>
+            <canvas class="clickable-canvas" id="item2Canvas"></canvas>
+            <div class="controls">
+                <label for="color">Color:</label>
+                <input type="color" id="color" value="#ff0000">
+                <label for="texture">Texture:</label>
+                <select id="texture">
+                    <option value="texture1.jpg">Texture 1</option>
+                    <option value="texture2.jpg">Texture 2</option>
+                    <option value="texture3.jpg">Texture 3</option>
+                    <option value="texture4.jpg">Texture 4</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="button-container">
+        <a href="/home">
+            <button style="padding: 10px 20px; background-color: #007bff; color: #fff; border: none; cursor: pointer;" type="submit">
+                Log Out
+            </button>
+        </a>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Function to create a cloth object
+        function createCloth() {
+            const clothWidth = 300;
+            const clothHeight = 300;
+            const clothSegments = 10;
+            const clothGeometry = new THREE.PlaneGeometry(clothWidth, clothHeight, clothSegments, clothSegments);
+            const clothMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+            const clothMesh = new THREE.Mesh(clothGeometry, clothMaterial);
+            return clothMesh;
+        }
+
+        var scene, camera, renderer;
+
+        // Function to initialize scene and render cloth object
+        function init(itemCanvas, colorInput, textureSelect) {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, itemCanvas.clientWidth / itemCanvas.clientHeight, 0.1, 1000);
+            camera.position.z = 5;
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(itemCanvas.clientWidth, itemCanvas.clientHeight);
+            itemCanvas.appendChild(renderer.domElement);
+
+            const cloth = createCloth();
+            scene.add(cloth);
+
+            camera.position.z = 500;
+
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Update cloth color and texture when inputs change
+            colorInput.addEventListener('input', () => {
+                cloth.material.color.set(colorInput.value);
+            });
+
+            textureSelect.addEventListener('change', () => {
+                const newTextureUrl = textureSelect.value;
+                const newTexture = new THREE.TextureLoader().load(newTextureUrl);
+                cloth.material.map = newTexture;
+                cloth.material.needsUpdate = true;
+            });
+
+        // Initialize each item's 3D scene with controls
+        var color1Input = document.getElementById('color');
+        var texture1Select = document.getElementById('texture');
+        var canvases = document.querySelectorAll('.clickable-canvas');
+        init(canvases, color1Input, texture1Select);
+    }
+    </script>
+</body>
+</html>
